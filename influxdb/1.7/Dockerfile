@@ -9,6 +9,12 @@ RUN set -ex && \
         gpg --keyserver keyserver.pgp.com --recv-keys "$key" ; \
     done
 
+ARG INFLUXDB_UID=1031
+ARG INFLUXDB_GID=1031
+
+RUN addgroup --gid $INFLUXDB_GID --system influxdb && \
+    adduser --uid $INFLUXDB_UID --gid $INFLUXDB_GID --home /var/lib/influxdb --disabled-login influxdb
+
 ENV INFLUXDB_VERSION 1.7.6
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" && \
     case "${dpkgArch##*-}" in \
